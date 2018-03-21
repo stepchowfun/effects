@@ -4,7 +4,7 @@
 build:
 	stack build --pedantic --install-ghc --allow-different-user
 
-test: build
+test:
 	stack test --pedantic --install-ghc --allow-different-user
 
 lint:
@@ -50,10 +50,7 @@ clean:
 	rm -rf .stack-work
 
 docker-deps:
-	docker build \
-	  -f scripts/Dockerfile \
-	  -t stephanmisc/effects:deps \
-	  .
+	docker build -f scripts/Dockerfile -t stephanmisc/effects:deps .
 
 docker-build:
 	CONTAINER="$$( \
