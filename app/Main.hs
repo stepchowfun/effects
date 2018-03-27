@@ -1,6 +1,8 @@
 module Main (main) where
 
-import Greet (greet)
+import BigMonad
 
 main :: IO ()
-main = greet
+main = do
+  putStrLn "Big monad:\n"
+  BigMonad.ioProgram
