@@ -16,7 +16,10 @@ cabal-version:       >= 1.10
 library
   hs-source-dirs:      src
   exposed-modules:     BigMonad
+                     , MonadTransformers
   build-depends:       base >= 4.7 && < 5
+                     , MonadRandom
+                     , mtl
                      , random
   default-language:    Haskell2010
 
@@ -33,10 +36,13 @@ test-suite effects-test
   hs-source-dirs:      test
   main-is:             MainSpec.hs
   other-modules:       BigMonadSpec
+                     , MonadTransformersSpec
   build-depends:       base
+                     , MonadRandom
                      , effects
                      , hspec
                      , hspec-core
+                     , mtl
                      , random
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
