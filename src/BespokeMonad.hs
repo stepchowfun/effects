@@ -1,9 +1,9 @@
 {-# LANGUAGE DeriveFunctor #-}
 
-module BigMonad (Computation(..), ioProgram, program) where
+module BespokeMonad (Computation(..), ioProgram, program) where
 
 {-
- - This example solves the challenge with one big, manually constructed monad.
+ - This example solves the challenge with a single manually constructed monad.
  - This is as basic as it gets: no monad transformers, no free monads, no
  - finally tagless encodings, etc.
  -}
