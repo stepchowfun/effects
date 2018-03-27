@@ -1,4 +1,4 @@
-module MonadTransformers (Computation, interpret, ioProgram, program) where
+module MonadTransformers (Computation, run, ioProgram, program) where
 
 {-
  - This example solves the challenge in the most standard way: with a monad
@@ -12,8 +12,8 @@ import Control.Monad.Writer (WriterT, runWriterT, tell)
 
 type Computation = WriterT String (StateT Integer (Rand StdGen))
 
-interpret :: Computation a -> IO a
-interpret c =
+run :: Computation a -> IO a
+run c =
   let (((x, s), _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
   in  putStrLn s >> return x
 
@@ -26,4 +26,4 @@ program = replicateM_ 10 $ do
   return ()
 
 ioProgram :: IO ()
-ioProgram = interpret program
+ioProgram = run program
