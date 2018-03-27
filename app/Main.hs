@@ -1,7 +1,8 @@
 module Main (main) where
 
-import BespokeMonad
-import MonadTransformers
+import qualified BespokeMonad
+import qualified FreeMonad
+import qualified MonadTransformers
 
 main :: IO ()
 main = do
@@ -9,3 +10,5 @@ main = do
   BespokeMonad.ioProgram
   putStrLn "Monad transformers:\n"
   MonadTransformers.ioProgram
+  putStrLn "Free monad:\n"
+  FreeMonad.ioProgram

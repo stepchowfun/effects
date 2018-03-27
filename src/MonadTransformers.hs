@@ -1,4 +1,4 @@
-module MonadTransformers (ioProgram, program) where
+module MonadTransformers (Computation, interpret, ioProgram, program) where
 
 {-
  - This example solves the challenge in the most standard way: with a monad
