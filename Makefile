@@ -1,8 +1,11 @@
 .PHONY: \
-  build test lint format clean docker-deps docker-build
+  build run test lint format clean docker-deps docker-build
 
 build:
 	stack build --pedantic --install-ghc --allow-different-user
+
+run: build
+	stack exec effects-exe
 
 test:
 	stack test --pedantic --install-ghc --allow-different-user
@@ -59,7 +62,7 @@ docker-build:
 	      chown -R user:user repo && \
 	      cd repo && \
 	      su user -s /bin/bash -l -c " \
-	        cd repo && make clean && make build test lint \
+	        cd repo && make clean && make build run test lint \
 	      " \
 	    ' \
 	)" && \
