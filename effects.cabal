@@ -15,8 +15,9 @@ cabal-version:       >= 1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Greet
+  exposed-modules:     BigMonad
   build-depends:       base >= 4.7 && < 5
+                     , random
   default-language:    Haskell2010
 
 executable effects-exe
@@ -31,11 +32,12 @@ test-suite effects-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             MainSpec.hs
-  other-modules:       GreetSpec
+  other-modules:       BigMonadSpec
   build-depends:       base
                      , effects
                      , hspec
                      , hspec-core
+                     , random
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
