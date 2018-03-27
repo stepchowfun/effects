@@ -36,6 +36,7 @@ test-suite effects-test
   hs-source-dirs:      test
   main-is:             MainSpec.hs
   other-modules:       BespokeMonadSpec
+                     , ExpectedOutput
                      , MonadTransformersSpec
   build-depends:       base
                      , MonadRandom
