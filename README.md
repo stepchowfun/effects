@@ -16,8 +16,8 @@ The program should be interpreted in the `IO` monad.
 
 ## Instructions
 
-Make sure you have [Stack](https://docs.haskellstack.org/en/stable/README/) installed. Then you can use this command to run the demo:
+Make sure you have [Make](https://www.gnu.org/software/make/) and [Stack](https://docs.haskellstack.org/en/stable/README/) installed. Then you can use this command to run the demo:
 
 ```
-stack exec effects-exe
+make run
 ```
