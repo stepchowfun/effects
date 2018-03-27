@@ -5,7 +5,7 @@ module BespokeMonad (Computation(..), ioProgram, program) where
 {-
  - This example solves the challenge with a single manually constructed monad.
  - This is as basic as it gets: no monad transformers, no free monads, no
- - finally tagless encodings, etc.
+ - final tagless encodings, etc.
  -}
 
 import Control.Monad (replicateM_)
