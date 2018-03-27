@@ -1,5 +1,4 @@
-.PHONY: \
-  build run test lint format clean docker-deps docker-build
+.PHONY: build run test lint format clean docker-deps docker-build
 
 build:
 	stack build --pedantic --install-ghc --allow-different-user
