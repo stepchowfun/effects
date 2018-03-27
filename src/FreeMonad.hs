@@ -49,4 +49,4 @@ program = replicateM_ 10 $ do
   return ()
 
 ioProgram :: IO ()
-ioProgram = MonadTransformers.interpret (interpret program)
+ioProgram = MonadTransformers.run (interpret program)

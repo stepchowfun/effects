@@ -12,21 +12,21 @@ import Control.Monad (replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
 
 newtype Computation a = Computation {
-    run :: StdGen -> Integer -> (StdGen, Integer, String, a)
+    runComputation :: StdGen -> Integer -> (StdGen, Integer, String, a)
   } deriving Functor
 
 instance Applicative Computation where
   pure x = Computation $ \g i -> (g, i, "", x)
   f <*> c = Computation $ \g1 i1 ->
-    let (g2, i2, s2, x2) = run f g1 i1
-        (g3, i3, s3, x3) = run c g2 i2
+    let (g2, i2, s2, x2) = runComputation f g1 i1
+        (g3, i3, s3, x3) = runComputation c g2 i2
         x4 = x2 x3
     in (g3, i3, s2 ++ s3, x4)
 
 instance Monad Computation where
   c >>= f = Computation $ \g1 i1 ->
-    let (g2, i2, s2, x2) = run c g1 i1
-        (g3, i3, s3, x3) = run (f x2) g2 i2
+    let (g2, i2, s2, x2) = runComputation c g1 i1
+        (g3, i3, s3, x3) = runComputation (f x2) g2 i2
     in (g3, i3, s2 ++ s3, x3)
 
 getRandom :: Computation Integer
@@ -42,8 +42,8 @@ setAccumulator i = Computation $ \g _ -> (g, i, "", ())
 logOutput :: String -> Computation ()
 logOutput s = Computation $ \g i -> (g, i, s, ())
 
-interpret :: Computation a -> IO a
-interpret (Computation k) =
+run :: Computation a -> IO a
+run (Computation k) =
   let (_, _, s, x) = k (mkStdGen 0) 0 in putStrLn s >> return x
 
 program :: Computation ()
@@ -55,4 +55,4 @@ program = replicateM_ 10 $ do
   return ()
 
 ioProgram :: IO ()
-ioProgram = interpret program
+ioProgram = run program
