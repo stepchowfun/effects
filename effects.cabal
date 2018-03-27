@@ -15,7 +15,7 @@ cabal-version:       >= 1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     BigMonad
+  exposed-modules:     BespokeMonad
                      , MonadTransformers
   build-depends:       base >= 4.7 && < 5
                      , MonadRandom
@@ -35,7 +35,7 @@ test-suite effects-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             MainSpec.hs
-  other-modules:       BigMonadSpec
+  other-modules:       BespokeMonadSpec
                      , MonadTransformersSpec
   build-depends:       base
                      , MonadRandom

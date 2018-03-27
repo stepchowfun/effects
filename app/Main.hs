@@ -1,11 +1,11 @@
 module Main (main) where
 
-import BigMonad
+import BespokeMonad
 import MonadTransformers
 
 main :: IO ()
 main = do
-  putStrLn "Big monad:\n"
-  BigMonad.ioProgram
+  putStrLn "Bespoke monad:\n"
+  BespokeMonad.ioProgram
   putStrLn "Monad transformers:\n"
   MonadTransformers.ioProgram
