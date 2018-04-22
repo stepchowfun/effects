@@ -37,4 +37,4 @@ RUN stack setup --resolver lts-10.4
 
 # The `mkdir` command is needed to work around a bug in brittany. See
 # https://github.com/lspitzner/brittany/issues/115 for details.
-RUN mkdir "$HOME/.config" && stack install brittany
+RUN mkdir "$HOME/.config" && stack install brittany hlint

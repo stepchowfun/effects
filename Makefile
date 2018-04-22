@@ -10,6 +10,7 @@ test:
 	stack test --pedantic --install-ghc --allow-different-user
 
 lint:
+	hlint .
 	./scripts/lint-general.rb $(shell \
 	  find . -type d \( \
 	    -path ./.git -o \
