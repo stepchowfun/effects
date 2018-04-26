@@ -1,4 +1,6 @@
-module MonadTransformersSpec (spec) where
+module MonadTransformersSpec
+  ( spec
+  ) where
 
 import Control.Monad.Random (mkStdGen, runRand)
 import Control.Monad.State (runStateT)
@@ -9,7 +11,8 @@ import Test.Hspec (Spec, describe, it, shouldBe)
 
 spec :: Spec
 spec =
-  describe "Monad transformers" $ it "should produce the correct output" $ do
+  describe "Monad transformers" $
+  it "should produce the correct output" $ do
     let (((_, s), _), _) =
           runRand (runStateT (runWriterT program) 0) (mkStdGen 0)
     s `shouldBe` expectedOutput
