@@ -1,6 +1,6 @@
 module MonadTransformers
   ( Computation
-  , run
+  , interpret
   , ioProgram
   , program
   ) where
@@ -41,11 +41,11 @@ program =
     return ()
 
 -- An interpreter
-run :: Computation a -> IO a
-run c =
+interpret :: Computation a -> IO a
+interpret c =
   let (((x, s), _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
   in putStrLn s >> return x
 
 -- An interpretation of the program
 ioProgram :: IO ()
-ioProgram = run program
+ioProgram = interpret program

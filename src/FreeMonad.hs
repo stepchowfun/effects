@@ -62,4 +62,4 @@ interpret =
 
 -- An interpretation of the program
 ioProgram :: IO ()
-ioProgram = MonadTransformers.run (interpret program)
+ioProgram = MonadTransformers.interpret (interpret program)
