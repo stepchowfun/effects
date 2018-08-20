@@ -14,6 +14,7 @@ module BespokeMonad
 import Control.Monad (replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
 
+-- The monad
 newtype Computation a = Computation
   { runComputation :: StdGen -> Integer -> (StdGen, Integer, String, a)
   } deriving (Functor)
@@ -34,6 +35,7 @@ instance Monad Computation where
           (g3, i3, s3, x3) = runComputation (f x2) g2 i2
       in (g3, i3, s2 ++ s3, x3)
 
+-- The operations
 getRandom :: Computation Integer
 getRandom =
   Computation $ \g1 i ->
@@ -49,11 +51,7 @@ setAccumulator i = Computation $ \g _ -> (g, i, "", ())
 logOutput :: String -> Computation ()
 logOutput s = Computation $ \g i -> (g, i, s, ())
 
-run :: Computation a -> IO a
-run (Computation k) =
-  let (_, _, s, x) = k (mkStdGen 0) 0
-  in putStrLn s >> return x
-
+-- The program
 program :: Computation ()
 program =
   replicateM_ 10 $ do
@@ -63,5 +61,12 @@ program =
     setAccumulator (r + i)
     return ()
 
+-- An interpreter
+run :: Computation a -> IO a
+run (Computation k) =
+  let (_, _, s, x) = k (mkStdGen 0) 0
+  in putStrLn s >> return x
+
+-- An interpretation of the program
 ioProgram :: IO ()
 ioProgram = run program
