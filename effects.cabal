@@ -18,8 +18,8 @@ library
   exposed-modules:     BespokeMonad
                      , FreeMonad
                      , MonadTransformers
-  build-depends:       base >= 4.7 && < 5
-                     , MonadRandom
+  build-depends:       MonadRandom
+                     , base >= 4.7 && < 5
                      , free
                      , mtl
                      , random
@@ -41,8 +41,8 @@ test-suite effects-test
                      , ExpectedOutput
                      , FreeMonadSpec
                      , MonadTransformersSpec
-  build-depends:       base
-                     , MonadRandom
+  build-depends:       MonadRandom
+                     , base
                      , effects
                      , hspec
                      , hspec-core
