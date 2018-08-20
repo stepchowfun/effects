@@ -62,11 +62,11 @@ program =
     return ()
 
 -- An interpreter
-run :: Computation a -> IO a
-run (Computation k) =
+interpret :: Computation a -> IO a
+interpret (Computation k) =
   let (_, _, s, x) = k (mkStdGen 0) 0
   in putStrLn s >> return x
 
 -- An interpretation of the program
 ioProgram :: IO ()
-ioProgram = run program
+ioProgram = interpret program
