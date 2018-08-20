@@ -6,9 +6,9 @@ An exploration of the various approaches to modeling side effects in a purely fu
 
 ## Techniques demonstrated
 
-- A bespoke monad.
-- A standard monad transformer stack.
-- A free monad with an interpreter into the aforementioned monad transformer stack.
+- A bespoke monad
+- A standard monad transformer stack
+- A free monad with an interpreter into the aforementioned monad transformer stack
 
 ## The challenge
 

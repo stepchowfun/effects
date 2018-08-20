@@ -25,8 +25,10 @@ data Operations a
               a
   deriving (Functor)
 
+-- The monad
 type Computation = Free Operations
 
+-- The operations
 getRandom :: Computation Integer
 getRandom = Free (GetRandom return)
 
@@ -39,14 +41,7 @@ setAccumulator i = liftF (SetAccumulator i ())
 logOutput :: String -> Computation ()
 logOutput s = liftF (LogOutput s ())
 
-interpret :: Computation a -> MonadTransformers.Computation a
-interpret =
-  foldFree $ \case
-    GetRandom k -> k <$> getRandomR (0, 9)
-    GetAccumulator k -> k <$> get
-    SetAccumulator i k -> k <$ put i
-    LogOutput s k -> k <$ tell s
-
+-- The program
 program :: Computation ()
 program =
   replicateM_ 10 $ do
@@ -56,5 +51,15 @@ program =
     setAccumulator (r + i)
     return ()
 
+-- An interpreter
+interpret :: Computation a -> MonadTransformers.Computation a
+interpret =
+  foldFree $ \case
+    GetRandom k -> k <$> getRandomR (0, 9)
+    GetAccumulator k -> k <$> get
+    SetAccumulator i k -> k <$ put i
+    LogOutput s k -> k <$ tell s
+
+-- An interpretation of the program
 ioProgram :: IO ()
 ioProgram = MonadTransformers.run (interpret program)
