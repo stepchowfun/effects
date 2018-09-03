@@ -1,4 +1,5 @@
-{-# LANGUAGE DeriveFunctor, LambdaCase #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE LambdaCase #-}
 
 module FreeMonad
   ( interpret
@@ -7,7 +8,11 @@ module FreeMonad
   ) where
 
 {-
- - This example solves the challenge with a free monad.
+ - This example solves the challenge with a free monad. The use of free monads
+ - to structure programs was popularized by [1].
+ -
+ - [1] Wouter Swierstra. 2008. Data types à la carte. J. Funct. Program. 18, 4
+ -     (July 2008), 423-436. DOI=http://dx.doi.org/10.1017/S0956796808006758
  -}
 import Control.Monad (replicateM_)
 import Control.Monad.Free (Free(..), foldFree, liftF)
@@ -16,6 +21,7 @@ import Control.Monad.State (get, put)
 import Control.Monad.Writer (tell)
 import qualified MonadTransformers
 
+-- The monad (constructed from a functor of operations)
 data Operations a
   = GetRandom (Integer -> a)
   | GetAccumulator (Integer -> a)
@@ -25,7 +31,6 @@ data Operations a
               a
   deriving (Functor)
 
--- The monad
 type Computation = Free Operations
 
 -- The operations

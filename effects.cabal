@@ -16,10 +16,12 @@ cabal-version:       >= 1.10
 library
   hs-source-dirs:      src
   exposed-modules:     BespokeMonad
+                     , ExtensibleEffects
                      , FreeMonad
                      , MonadTransformers
   build-depends:       MonadRandom
                      , base >= 4.7 && < 5
+                     , extensible-effects
                      , free
                      , mtl
                      , random
@@ -39,11 +41,13 @@ test-suite effects-test
   main-is:             MainSpec.hs
   other-modules:       BespokeMonadSpec
                      , ExpectedOutput
+                     , ExtensibleEffectsSpec
                      , FreeMonadSpec
                      , MonadTransformersSpec
   build-depends:       MonadRandom
                      , base
                      , effects
+                     , extensible-effects
                      , hspec
                      , hspec-core
                      , mtl

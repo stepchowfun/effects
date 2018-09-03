@@ -9,9 +9,20 @@ module BespokeMonad
 {-
  - This example solves the challenge with a single manually constructed monad.
  - This is as basic as it gets: no monad transformers, no free monads, no
- - final tagless encodings, etc.
+ - extensible effects, etc. The use of monads to describe the denotational
+ - semantics of effectful programs was first described in [1]. In the following
+ - year, [2] showed how monads could be used to structure programs rather than
+ - reason about them.
+ -
+ - [1] E. Moggi. 1989. Computational lambda-calculus and monads. In Proceedings
+ -     of the Fourth Annual Symposium on Logic in computer science. IEEE Press,
+ -     Piscataway, NJ, USA, 14-23.
+ -
+ - [2] Philip Wadler. 1990. Comprehending monads. In Proceedings of the 1990
+ -     ACM conference on LISP and functional programming (LFP '90). ACM, New
+ -     York, NY, USA, 61-78. DOI=http://dx.doi.org/10.1145/91556.91592
  -}
-import Control.Monad (replicateM_)
+import Control.Monad (ap, replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
 
 -- The monad
@@ -20,15 +31,11 @@ newtype Computation a = Computation
   } deriving (Functor)
 
 instance Applicative Computation where
-  pure x = Computation $ \g i -> (g, i, "", x)
-  f <*> c =
-    Computation $ \g1 i1 ->
-      let (g2, i2, s2, x2) = runComputation f g1 i1
-          (g3, i3, s3, x3) = runComputation c g2 i2
-          x4 = x2 x3
-      in (g3, i3, s2 ++ s3, x4)
+  pure = return
+  (<*>) = ap
 
 instance Monad Computation where
+  return x = Computation $ \g i -> (g, i, "", x)
   c >>= f =
     Computation $ \g1 i1 ->
       let (g2, i2, s2, x2) = runComputation c g1 i1
