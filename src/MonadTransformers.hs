@@ -7,7 +7,12 @@ module MonadTransformers
 
 {-
  - This example solves the challenge in the most standard way: with a monad
- - transformer stack.
+ - transformer stack. The idea of monad transformers came from [1].
+ -
+ - [1] Sheng Liang, Paul Hudak, and Mark Jones. 1995. Monad transformers and
+ -     modular interpreters. In Proceedings of the 22nd ACM SIGPLAN-SIGACT
+ -     symposium on Principles of programming languages (POPL '95). ACM, New
+ -     York, NY, USA, 333-343. DOI=http://dx.doi.org/10.1145/199448.199528
  -}
 import Control.Monad (replicateM_)
 import Control.Monad.Random (Rand, StdGen, getRandomR, mkStdGen, runRand)
