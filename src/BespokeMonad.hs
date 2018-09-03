@@ -11,7 +11,7 @@ module BespokeMonad
  - This is as basic as it gets: no monad transformers, no free monads, no
  - final tagless encodings, etc.
  -}
-import Control.Monad (replicateM_)
+import Control.Monad (ap, replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
 
 -- The monad
@@ -20,15 +20,11 @@ newtype Computation a = Computation
   } deriving (Functor)
 
 instance Applicative Computation where
-  pure x = Computation $ \g i -> (g, i, "", x)
-  f <*> c =
-    Computation $ \g1 i1 ->
-      let (g2, i2, s2, x2) = runComputation f g1 i1
-          (g3, i3, s3, x3) = runComputation c g2 i2
-          x4 = x2 x3
-      in (g3, i3, s2 ++ s3, x4)
+  pure = return
+  (<*>) = ap
 
 instance Monad Computation where
+  return x = Computation $ \g i -> (g, i, "", x)
   c >>= f =
     Computation $ \g1 i1 ->
       let (g2, i2, s2, x2) = runComputation c g1 i1

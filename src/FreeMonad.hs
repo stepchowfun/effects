@@ -16,6 +16,7 @@ import Control.Monad.State (get, put)
 import Control.Monad.Writer (tell)
 import qualified MonadTransformers
 
+-- The monad (constructed from a functor of operations)
 data Operations a
   = GetRandom (Integer -> a)
   | GetAccumulator (Integer -> a)
@@ -25,7 +26,6 @@ data Operations a
               a
   deriving (Functor)
 
--- The monad
 type Computation = Free Operations
 
 -- The operations
