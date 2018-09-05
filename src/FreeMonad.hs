@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE LambdaCase #-}
 
 module FreeMonad
   ( interpret
@@ -21,7 +20,10 @@ import Control.Monad.State (get, put)
 import Control.Monad.Writer (tell)
 import qualified MonadTransformers
 
--- The monad (constructed from a functor of operations)
+-- The monad
+type Computation = Free Operations
+
+-- The operations
 data Operations a
   = GetRandom (Integer -> a)
   | GetAccumulator (Integer -> a)
@@ -31,14 +33,11 @@ data Operations a
               a
   deriving (Functor)
 
-type Computation = Free Operations
-
--- The operations
 getRandom :: Computation Integer
-getRandom = Free (GetRandom return)
+getRandom = liftF (GetRandom id)
 
 getAccumulator :: Computation Integer
-getAccumulator = Free (GetAccumulator return)
+getAccumulator = liftF (GetAccumulator id)
 
 setAccumulator :: Integer -> Computation ()
 setAccumulator i = liftF (SetAccumulator i ())
@@ -54,16 +53,17 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    return ()
+    pure ()
 
 -- An interpreter
+transform :: Operations a -> MonadTransformers.Computation a
+transform (GetRandom k) = k <$> getRandomR (0, 9)
+transform (GetAccumulator k) = k <$> get
+transform (SetAccumulator i k) = k <$ put i
+transform (LogOutput s k) = k <$ tell s
+
 interpret :: Computation a -> MonadTransformers.Computation a
-interpret =
-  foldFree $ \case
-    GetRandom k -> k <$> getRandomR (0, 9)
-    GetAccumulator k -> k <$> get
-    SetAccumulator i k -> k <$ put i
-    LogOutput s k -> k <$ tell s
+interpret = foldFree transform
 
 -- An interpretation of the program
 ioProgram :: IO ()

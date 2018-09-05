@@ -7,12 +7,11 @@ module BespokeMonad
   ) where
 
 {-
- - This example solves the challenge with a single manually constructed monad.
- - This is as basic as it gets: no monad transformers, no free monads, no
- - extensible effects, etc. The use of monads to describe the denotational
- - semantics of effectful programs was first described in [1]. In the following
- - year, [2] showed how monads could be used to structure programs rather than
- - reason about them.
+ - This example solves the challenge with a handcrafted monad. This is as basic
+ - as it gets: no monad transformers, no free monads, no extensible effects,
+ - etc. The use of monads to describe the denotational semantics of effectful
+ - programs was first described in [1]. In the following year, [2] showed how
+ - monads could be used to structure programs rather than reason about them.
  -
  - [1] E. Moggi. 1989. Computational lambda-calculus and monads. In Proceedings
  -     of the Fourth Annual Symposium on Logic in computer science. IEEE Press,
@@ -31,11 +30,10 @@ newtype Computation a = Computation
   } deriving (Functor)
 
 instance Applicative Computation where
-  pure = return
+  pure x = Computation $ \g i -> (g, i, "", x)
   (<*>) = ap
 
 instance Monad Computation where
-  return x = Computation $ \g i -> (g, i, "", x)
   c >>= f =
     Computation $ \g1 i1 ->
       let (g2, i2, s2, x2) = runComputation c g1 i1
@@ -66,13 +64,13 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    return ()
+    pure ()
 
 -- An interpreter
 interpret :: Computation a -> IO a
 interpret (Computation k) =
   let (_, _, s, x) = k (mkStdGen 0) 0
-  in putStrLn s >> return x
+  in putStrLn s >> pure x
 
 -- An interpretation of the program
 ioProgram :: IO ()

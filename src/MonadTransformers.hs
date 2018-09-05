@@ -43,13 +43,13 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    return ()
+    pure ()
 
 -- An interpreter
 interpret :: Computation a -> IO a
 interpret c =
   let (((x, s), _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
-  in putStrLn s >> return x
+  in putStrLn s >> pure x
 
 -- An interpretation of the program
 ioProgram :: IO ()
