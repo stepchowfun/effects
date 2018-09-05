@@ -1,7 +1,6 @@
 module MonadTransformers
   ( Computation
   , interpret
-  , ioProgram
   , program
   ) where
 
@@ -46,11 +45,7 @@ program =
     pure ()
 
 -- An interpreter
-interpret :: Computation a -> IO a
+interpret :: Computation a -> (a, String)
 interpret c =
-  let (((x, s), _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
-  in putStrLn s >> pure x
-
--- An interpretation of the program
-ioProgram :: IO ()
-ioProgram = interpret program
+  let ((x, _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
+  in x

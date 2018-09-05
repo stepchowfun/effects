@@ -1,8 +1,7 @@
 {-# LANGUAGE DeriveFunctor #-}
 
 module BespokeMonad
-  ( Computation(..)
-  , ioProgram
+  ( interpret
   , program
   ) where
 
@@ -67,11 +66,7 @@ program =
     pure ()
 
 -- An interpreter
-interpret :: Computation a -> IO a
+interpret :: Computation a -> (a, String)
 interpret (Computation k) =
-  let (_, _, s, x) = k (mkStdGen 0) 0
-  in putStrLn s >> pure x
-
--- An interpretation of the program
-ioProgram :: IO ()
-ioProgram = interpret program
+  let (_, _, o, x) = k (mkStdGen 0) 0
+  in (x, o)

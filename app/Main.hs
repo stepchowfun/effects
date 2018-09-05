@@ -10,10 +10,10 @@ import qualified MonadTransformers
 main :: IO ()
 main = do
   putStrLn "Bespoke monad:\n"
-  BespokeMonad.ioProgram
+  putStrLn . snd $ BespokeMonad.interpret BespokeMonad.program
   putStrLn "Extensible effects:\n"
-  ExtensibleEffects.ioProgram
+  putStrLn . snd $ ExtensibleEffects.interpret ExtensibleEffects.program
   putStrLn "Free monad:\n"
-  FreeMonad.ioProgram
+  putStrLn . snd $ FreeMonad.interpret FreeMonad.program
   putStrLn "Monad transformers:\n"
-  MonadTransformers.ioProgram
+  putStrLn . snd $ MonadTransformers.interpret MonadTransformers.program
