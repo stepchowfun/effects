@@ -6,10 +6,10 @@ An exploration of the various approaches to modeling side effects in a purely fu
 
 ## Techniques demonstrated
 
-- A bespoke monad
-- A standard monad transformer stack
-- A free monad with an interpreter into the aforementioned monad transformer stack
-- The `Eff` monad from the "extensible effects" framework
+- A [bespoke monad](https://github.com/stepchowfun/effects/blob/master/src/BespokeMonad.hs)
+- A standard [monad transformer stack](https://github.com/stepchowfun/effects/blob/master/src/MonadTransformers.hs)
+- A [free monad](https://github.com/stepchowfun/effects/blob/master/src/FreeMonad.hs) with an interpreter into the aforementioned monad transformer stack
+- The [`Eff` monad](https://github.com/stepchowfun/effects/blob/master/src/ExtensibleEffects.hs) from the "extensible effects" framework
 
 ## The challenge
 

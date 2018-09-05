@@ -14,7 +14,7 @@ module ExtensibleEffects
 
 {-
  - This example solves the challenge with the "extensible effects" framework
- - proposed in [1] and elaborated in [2].
+ - originally proposed in [1] and elaborated in [2].
  -
  - [1] Oleg Kiselyov, Amr Sabry, and Cameron Swords. 2013. Extensible effects:
  -     an alternative to monad transformers. In Proceedings of the 2013 ACM
@@ -43,7 +43,7 @@ runRandom :: Eff (Random ': r) a -> Eff r a
 runRandom =
   handle_relay_s
     (mkStdGen 0)
-    (const return)
+    (const pure)
     (\s1 GetRandom k ->
        let (r, s2) = randomR (0, 9) s1
        in k s2 r)
@@ -71,7 +71,7 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    return ()
+    pure ()
 
 -- An interpreter
 interpret ::
@@ -84,7 +84,7 @@ interpret ::
 interpret c =
   let ((x, s), _) =
         run . runState (0 :: Integer) . runMonoidWriter . runRandom $ c
-  in putStrLn s >> return x
+  in putStrLn s >> pure x
 
 -- An interpretation of the program
 ioProgram :: IO ()
