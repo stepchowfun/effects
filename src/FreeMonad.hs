@@ -2,7 +2,6 @@
 
 module FreeMonad
   ( interpret
-  , ioProgram
   , program
   ) where
 
@@ -62,9 +61,5 @@ transform (GetAccumulator k) = k <$> get
 transform (SetAccumulator i k) = k <$ put i
 transform (LogOutput s k) = k <$ tell s
 
-interpret :: Computation a -> MonadTransformers.Computation a
-interpret = foldFree transform
-
--- An interpretation of the program
-ioProgram :: IO ()
-ioProgram = MonadTransformers.interpret (interpret program)
+interpret :: Computation a -> (a, String)
+interpret c = MonadTransformers.interpret (foldFree transform c)

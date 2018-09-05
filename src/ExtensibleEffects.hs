@@ -7,9 +7,8 @@
 {-# LANGUAGE TypeOperators #-}
 
 module ExtensibleEffects
-  ( ioProgram
+  ( interpret
   , program
-  , runRandom
   ) where
 
 {-
@@ -39,15 +38,6 @@ data Random a where
   GetRandom :: Random Integer
   deriving (Typeable)
 
-runRandom :: Eff (Random ': r) a -> Eff r a
-runRandom =
-  handle_relay_s
-    (mkStdGen 0)
-    (const pure)
-    (\s1 GetRandom k ->
-       let (r, s2) = randomR (0, 9) s1
-       in k s2 r)
-
 -- The operations
 getRandom :: Member Random r => Eff r Integer
 getRandom = send GetRandom
@@ -73,6 +63,16 @@ program =
     setAccumulator (r + i)
     pure ()
 
+-- A custom effect handler
+runRandom :: Eff (Random ': r) a -> Eff r a
+runRandom =
+  handle_relay_s
+    (mkStdGen 0)
+    (const pure)
+    (\s1 GetRandom k ->
+       let (r, s2) = randomR (0, 9) s1
+       in k s2 r)
+
 -- An interpreter
 interpret ::
      (forall r. ( Member Random r
@@ -80,12 +80,8 @@ interpret ::
                 , Member (Writer String) r
                 ) =>
                   Eff r a)
-  -> IO a
+  -> (a, String)
 interpret c =
-  let ((x, s), _) =
+  let ((x, o), _) =
         run . runState (0 :: Integer) . runMonoidWriter . runRandom $ c
-  in putStrLn s >> pure x
-
--- An interpretation of the program
-ioProgram :: IO ()
-ioProgram = interpret program
+  in (x, o)
