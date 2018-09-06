@@ -42,6 +42,9 @@ packages:
 extra-deps:
 - extensible-effects-3.1.0.0
 
+- git: https://github.com/etorreborre/registry.git
+  commit: 75a933281ccb262ec22e7cd0e44730dc0dd73154
+
 # Override default flag values for local packages and extra-deps
 flags: {}
 

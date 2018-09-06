@@ -6,6 +6,7 @@ import qualified BespokeMonad
 import qualified ExtensibleEffects
 import qualified FreeMonad
 import qualified MonadTransformers
+import qualified Modules
 
 main :: IO ()
 main = do
@@ -17,3 +18,5 @@ main = do
   putStrLn . snd $ FreeMonad.interpret FreeMonad.program
   putStrLn "Monad transformers:\n"
   putStrLn . snd $ MonadTransformers.interpret MonadTransformers.program
+  putStrLn "Modules:\n"
+  Modules.app >>= Modules.run

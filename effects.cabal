@@ -24,7 +24,9 @@ library
                      , extensible-effects
                      , free
                      , mtl
+                     , protolude
                      , random
+                     , registry
   default-language:    Haskell2010
 
 executable effects-exe
