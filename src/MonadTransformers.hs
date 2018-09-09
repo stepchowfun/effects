@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module MonadTransformers
   ( Computation
   , interpret
@@ -14,28 +16,35 @@ module MonadTransformers
  -     York, NY, USA, 333-343. DOI=http://dx.doi.org/10.1145/199448.199528
  -}
 import Control.Monad (replicateM_)
-import Control.Monad.Random (Rand, StdGen, getRandomR, mkStdGen, runRand)
-import Control.Monad.State (StateT, get, put, runStateT)
-import Control.Monad.Writer (WriterT, runWriterT, tell)
+import Control.Monad.Random
+  ( MonadRandom
+  , Rand
+  , StdGen
+  , getRandomR
+  , mkStdGen
+  , runRand
+  )
+import Control.Monad.State (MonadState, StateT, get, put, runStateT)
+import Control.Monad.Writer (MonadWriter, WriterT, runWriterT, tell)
 
 -- The monad
 type Computation = WriterT String (StateT Integer (Rand StdGen))
 
 -- The operations
-getRandom :: Computation Integer
+getRandom :: MonadRandom m => m Integer
 getRandom = getRandomR (0, 9)
 
-getAccumulator :: Computation Integer
+getAccumulator :: MonadState Integer m => m Integer
 getAccumulator = get
 
-setAccumulator :: Integer -> Computation ()
+setAccumulator :: MonadState Integer m => Integer -> m ()
 setAccumulator = put
 
-logOutput :: String -> Computation ()
+logOutput :: MonadWriter String m => String -> m ()
 logOutput = tell
 
 -- The program
-program :: Computation ()
+program :: (MonadRandom m, MonadState Integer m, MonadWriter String m) => m ()
 program =
   replicateM_ 10 $ do
     i <- getAccumulator
