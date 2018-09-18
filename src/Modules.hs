@@ -51,10 +51,10 @@ registry :: Registry
    -- outputs for constructors in the registry
    '[IO AccumulatorModule, IO LogModule, IO RandomModule, IO App]
 registry =
-     funM  @IO newAccumulatorModule
-  +: pureM @IO newLogModule
-  +: pureM @IO newRandomModule
-  +: pureM @IO newApp
+     fun   newAccumulatorModule
+  +: funTo @IO newLogModule
+  +: funTo @IO newRandomModule
+  +: funTo @IO newApp
   +: end
 
 -- * Logging module, can go into its own library
