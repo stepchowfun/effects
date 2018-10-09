@@ -10,21 +10,6 @@ module Modules (
 
 {-
 
-  This module describes a different approach to handling effects based on the
-  the idea that the idea of "having to manage effects" is primarily about
-  being able to compose functionality through the use of some interfaces
-  for example:
-
-   - the functions of the StateT monad transformer in MonadTransformers
-   - the "state" effect in ExtensibleEffects
-
-  Then we wish to "assemble" the implementations with:
-
-   - monad transformers which compose so that `StateT m` is still a
-   monad if m is a Monad
-
-   - interpreters for extensible effects
-
   Here we describe functionalities with simple datatypes, records of functions,
   and call them "modules"
 
