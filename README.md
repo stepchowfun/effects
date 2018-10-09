@@ -22,7 +22,7 @@ This repository contains 4 implementations of the program described above, each 
 - A standard [monad transformer stack](https://github.com/stepchowfun/effects/blob/master/src/MonadTransformers.hs)
 - A [free monad](https://github.com/stepchowfun/effects/blob/master/src/FreeMonad.hs)
 - The [`Eff` monad](https://github.com/stepchowfun/effects/blob/master/src/ExtensibleEffects.hs) from the "extensible effects" framework
-- A [Registry](https://github.com/etorreborre/registry)
+- A [Registry](https://github.com/etorreborre/effects/blob/master/src/Modules.hs) using the [`registry`](https://github.com/etorreborre/registry) library
 
 ## Instructions
 
