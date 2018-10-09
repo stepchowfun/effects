@@ -47,35 +47,35 @@ app = make @(IO App) registry
 
 registry :: Registry
    -- inputs for constructors in the registry
-  '[IO LogModule, IO RandomModule, IO AccumulatorModule]
+  '[IO Logger, IO Random, IO Accumulator]
    -- outputs for constructors in the registry
-   '[IO AccumulatorModule, IO LogModule, IO RandomModule, IO App]
+   '[IO Accumulator, IO Logger, IO Random, IO App]
 registry =
-     fun   newAccumulatorModule
-  +: funTo @IO newLogModule
-  +: funTo @IO newRandomModule
+     fun   newAccumulator
+  +: funTo @IO newLogger
+  +: funTo @IO newRandom
   +: funTo @IO newApp
   +: end
 
 -- * Logging module, can go into its own library
 
-newtype LogModule = LogModule {
+newtype Logger = Logger {
   info :: forall a . (Show a) => a -> IO ()
 }
 
-newLogModule :: LogModule
-newLogModule = LogModule P.print
+newLogger :: Logger
+newLogger = Logger P.print
 
 -- * Random module, implemented using the global random generator
 --   for simplicity
 
-newtype RandomModule = RandomModule {
+newtype Random = Random {
   draw :: Int -> Int -> IO Int
 }
 
-newRandomModule :: RandomModule
-newRandomModule =
-  RandomModule {
+newRandom :: Random
+newRandom =
+  Random {
     draw = \l h -> getStdRandom (randomR (l, h))
   }
 
@@ -83,15 +83,15 @@ newRandomModule =
 --   the constructor for this module is effectful
 --   because we instantiate an IORef
 
-data AccumulatorModule = AccumulatorModule {
+data Accumulator = Accumulator {
   add :: Int -> IO ()
 , get :: IO Int
 }
 
-newAccumulatorModule :: IO AccumulatorModule
-newAccumulatorModule = do
+newAccumulator :: IO Accumulator
+newAccumulator = do
   counter <- newIORef 0
-  pure $ AccumulatorModule {
+  pure $ Accumulator {
     add = \n -> modifyIORef counter (+n)
   , get = readIORef counter
   }
@@ -103,11 +103,12 @@ newtype App = App  {
   run :: IO ()
 }
 
-newApp :: LogModule -> RandomModule -> AccumulatorModule -> App
-newApp logging random accumulator = App {
+newApp :: Logger -> Random -> Accumulator -> App
+newApp logger random accumulator = App {
   run = replicateM_ 10 $
           do current <- accumulator & get
-             _       <- (logging & info) $ current
+             _       <- (logger & info) $ current
              picked  <- (random & draw) 0 9
              accumulator & add $ picked
 }
+
