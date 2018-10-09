@@ -18,19 +18,24 @@ library
   exposed-modules:     BespokeMonad
                      , ExtensibleEffects
                      , FreeMonad
+                     , Modules
                      , MonadTransformers
   build-depends:       MonadRandom
                      , base >= 4.7 && < 5
                      , extensible-effects
                      , free
                      , mtl
+                     , protolude
                      , random
+                     , registry
   default-language:    Haskell2010
+
+  ghc-options:       -fhide-source-paths
 
 executable effects-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -fhide-source-paths
   build-depends:       base
                      , effects
   default-language:    Haskell2010
@@ -52,7 +57,7 @@ test-suite effects-test
                      , hspec-core
                      , mtl
                      , random
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -fhide-source-paths
   default-language:    Haskell2010
 
 source-repository head
