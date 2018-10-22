@@ -2,6 +2,7 @@
 {-# LANGUAGE Rank2Types          #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications    #-}
+{-# LANGUAGE RecordWildCards     #-}
 
 module Modules (
   app
@@ -76,7 +77,7 @@ data Accumulator = Accumulator {
 newAccumulator :: IO Accumulator
 newAccumulator = do
   counter <- newIORef 0
-  pure $ Accumulator {
+  pure Accumulator {
     add = \n -> modifyIORef counter (+n)
   , get = readIORef counter
   }
@@ -89,11 +90,11 @@ newtype App = App  {
 }
 
 newApp :: Logger -> Random -> Accumulator -> App
-newApp logger random accumulator = App {
+newApp Logger{..} Random{..} Accumulator{..} = App {
   run = replicateM_ 10 $
-          do current <- accumulator & get
-             _       <- (logger & info) $ current
-             picked  <- (random & draw) 0 9
-             accumulator & add $ picked
+          do current <- get
+             _       <- info current
+             picked  <- draw 0 9
+             add picked
 }
 
