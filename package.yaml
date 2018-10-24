@@ -1,0 +1,54 @@
+name:                effects
+version:             0.1.0.0
+github:              "stepchowfun/effects"
+license:             BSD3
+author:              "Stephan Boyer"
+maintainer:          "stephan@stephanboyer.com"
+copyright:           "2018 Stephan Boyer"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/stepchowfun/effects#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - MonadRandom
+  - extensible-effects
+  - free
+  - mtl
+  - random
+
+executables:
+  effects-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - effects
+
+tests:
+  effects-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - effects
+    - hspec

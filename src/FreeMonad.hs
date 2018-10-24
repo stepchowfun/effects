@@ -15,7 +15,7 @@ module FreeMonad
 import Control.Monad (replicateM_)
 import Control.Monad.Free (Free(..), foldFree, liftF)
 import Control.Monad.Random (getRandomR)
-import Control.Monad.State (get, put)
+import Control.Monad.State (gets, put)
 import Control.Monad.Writer (tell)
 import qualified MonadTransformers
 
@@ -57,7 +57,7 @@ program =
 -- An interpreter
 transform :: Operations a -> MonadTransformers.Computation a
 transform (GetRandom k) = k <$> getRandomR (0, 9)
-transform (GetAccumulator k) = k <$> get
+transform (GetAccumulator k) = gets k
 transform (SetAccumulator i k) = k <$ put i
 transform (LogOutput s k) = k <$ tell s
 

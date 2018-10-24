@@ -37,14 +37,14 @@ instance Monad Computation where
     Computation $ \g1 i1 ->
       let (g2, i2, s2, x2) = runComputation c g1 i1
           (g3, i3, s3, x3) = runComputation (f x2) g2 i2
-      in (g3, i3, s2 ++ s3, x3)
+       in (g3, i3, s2 ++ s3, x3)
 
 -- The operations
 getRandom :: Computation Integer
 getRandom =
   Computation $ \g1 i ->
     let (r, g2) = randomR (0, 9) g1
-    in (g2, i, "", r)
+     in (g2, i, "", r)
 
 getAccumulator :: Computation Integer
 getAccumulator = Computation $ \g i -> (g, i, "", i)
@@ -69,4 +69,4 @@ program =
 interpret :: Computation a -> (a, String)
 interpret (Computation k) =
   let (_, _, o, x) = k (mkStdGen 0) 0
-  in (x, o)
+   in (x, o)

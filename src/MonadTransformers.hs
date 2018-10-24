@@ -57,4 +57,4 @@ program =
 interpret :: Computation a -> (a, String)
 interpret c =
   let ((x, _), _) = runRand (runStateT (runWriterT c) 0) (mkStdGen 0)
-  in x
+   in x
