@@ -71,7 +71,7 @@ runRandom =
     (const pure)
     (\s1 GetRandom k ->
        let (r, s2) = randomR (0, 9) s1
-       in k s2 r)
+        in k s2 r)
 
 -- An interpreter
 interpret ::
@@ -84,4 +84,4 @@ interpret ::
 interpret c =
   let ((x, o), _) =
         run . runState (0 :: Integer) . runMonoidWriter . runRandom $ c
-  in (x, o)
+   in (x, o)

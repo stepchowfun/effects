@@ -4,14 +4,15 @@ RUN \
   DEBIAN_FRONTEND=noninteractive apt-get -y update && \
   DEBIAN_FRONTEND=noninteractive apt-get -y install \
     'build-essential=12.3' \
-    'ruby=1:2.3.*' && \
+    'ruby=1:2.3.3' && \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /usr/share/doc
 
 # The Stack installation script apparently uses apt-get.
 RUN \
   DEBIAN_FRONTEND=noninteractive apt-get -y update && \
-  DEBIAN_FRONTEND=noninteractive apt-get -y install 'curl=7.52.*' && \
+  DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    'curl=7.52.1-5+deb9u7' && \
   curl -sSL https://get.haskellstack.org/ | sh && \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /usr/share/doc && \
@@ -31,6 +32,6 @@ RUN \
   mkdir -p "$HOME/.local/bin" && \
   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
 
-RUN stack setup --resolver lts-10.4
+RUN stack setup --resolver lts-12.14
 
 RUN stack install hindent hlint
