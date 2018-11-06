@@ -4,10 +4,7 @@
 {-# LANGUAGE TypeApplications    #-}
 {-# LANGUAGE RecordWildCards     #-}
 
-module Modules (
-  app
-, run
-) where
+module Modules where
 
 {-
 
@@ -28,14 +25,14 @@ import           Protolude     as P hiding (get)
 import           System.Random (getStdRandom, randomR)
 
 -- | Top level application, created from the registry
-app :: IO App
-app = make @(IO App) registry
+app :: IO (App IO)
+app = make @(IO (App IO)) registry
 
 registry :: Registry
    -- inputs for constructors in the registry
-  '[IO Logger, IO Random, IO Accumulator]
+  '[IO (Logger IO), IO (Random IO), IO (Accumulator IO)]
    -- outputs for constructors in the registry
-   '[IO Accumulator, IO Logger, IO Random, IO App]
+   '[IO (Accumulator IO), IO (Logger IO), IO (Random IO), IO (App IO)]
 registry =
      fun   newAccumulator
   +: funTo @IO newLogger
@@ -45,21 +42,21 @@ registry =
 
 -- * Logging module, can go into its own library
 
-newtype Logger = Logger {
-  info :: forall a . (Show a) => a -> IO ()
+newtype Logger m = Logger {
+  info :: forall a . (Show a) => a -> m ()
 }
 
-newLogger :: Logger
+newLogger :: Logger IO
 newLogger = Logger P.print
 
 -- * Random module, implemented using the global random generator
 --   for simplicity
 
-newtype Random = Random {
-  draw :: Int -> Int -> IO Int
+newtype Random m = Random {
+  draw :: Int -> Int -> m Int
 }
 
-newRandom :: Random
+newRandom :: Random IO
 newRandom =
   Random {
     draw = \l h -> getStdRandom (randomR (l, h))
@@ -69,12 +66,12 @@ newRandom =
 --   the constructor for this module is effectful
 --   because we instantiate an IORef
 
-data Accumulator = Accumulator {
-  add :: Int -> IO ()
-, get :: IO Int
+data Accumulator m = Accumulator {
+  add :: Int -> m ()
+, get :: m Int
 }
 
-newAccumulator :: IO Accumulator
+newAccumulator :: IO (Accumulator IO)
 newAccumulator = do
   counter <- newIORef 0
   pure Accumulator {
@@ -85,11 +82,11 @@ newAccumulator = do
 -- * The top-level app containing the main program
 --   It depends on other modules for its implementation
 
-newtype App = App  {
-  run :: IO ()
+newtype App m = App  {
+  run :: m ()
 }
 
-newApp :: Logger -> Random -> Accumulator -> App
+newApp :: Logger IO -> Random IO -> Accumulator IO -> App IO
 newApp Logger{..} Random{..} Accumulator{..} = App {
   run = replicateM_ 10 $
           do current <- get
@@ -97,4 +94,3 @@ newApp Logger{..} Random{..} Accumulator{..} = App {
              picked  <- draw 0 9
              add picked
 }
-

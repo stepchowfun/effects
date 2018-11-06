@@ -19,6 +19,7 @@ library
                      , ExtensibleEffects
                      , FreeMonad
                      , Modules
+                     , ModulesPure
                      , MonadTransformers
   build-depends:       MonadRandom
                      , base >= 4.7 && < 5
