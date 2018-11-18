@@ -1,13 +1,13 @@
 .PHONY: build run test lint format clean docker-deps docker-build
 
 build:
-	stack build --pedantic --install-ghc --allow-different-user
+	stack build --install-ghc --allow-different-user
 
 run: build
 	stack exec effects-exe
 
 test:
-	stack test --pedantic --install-ghc --allow-different-user
+	stack test --install-ghc --allow-different-user
 
 lint:
 	hlint .
