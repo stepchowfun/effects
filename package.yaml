@@ -18,7 +18,11 @@ dependencies:
 
 ghc-options:
 - -Wall
+- -Wcompat
 - -Werror
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wredundant-constraints
 
 library:
   source-dirs: src
