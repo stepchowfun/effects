@@ -61,7 +61,6 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    pure ()
 
 -- A custom effect handler
 runRandom :: Eff (Random ': r) a -> Eff r a

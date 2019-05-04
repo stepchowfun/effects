@@ -51,7 +51,6 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    pure ()
 
 -- An interpreter
 interpret :: Computation a -> (a, String)

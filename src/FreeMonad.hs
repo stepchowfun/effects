@@ -52,7 +52,6 @@ program =
     logOutput (show i ++ "\n")
     r <- getRandom
     setAccumulator (r + i)
-    pure ()
 
 -- An interpreter
 transform :: Operations a -> MonadTransformers.Computation a
