@@ -24,9 +24,11 @@ import Control.Monad (ap, replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
 
 -- The monad
-newtype Computation a = Computation
-  { runComputation :: StdGen -> Integer -> (StdGen, Integer, String, a)
-  } deriving (Functor)
+newtype Computation a =
+  Computation
+    { runComputation :: StdGen -> Integer -> (StdGen, Integer, String, a)
+    }
+  deriving (Functor)
 
 instance Applicative Computation where
   pure x = Computation $ \g i -> (g, i, "", x)

@@ -25,8 +25,4 @@ This repository contains 4 implementations of the program described above, each 
 
 ## Instructions
 
-Make sure you have [Make](https://www.gnu.org/software/make/) and [Stack](https://docs.haskellstack.org/en/stable/README/) installed. Then you can use this command to run the demo:
-
-```
-make run
-```
+Make sure you have [Toast](https://github.com/stepchowfun/toast) installed. Then you can run `toast run` to build and run the demo.

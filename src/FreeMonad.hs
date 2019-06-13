@@ -26,10 +26,8 @@ type Computation = Free Operations
 data Operations a
   = GetRandom (Integer -> a)
   | GetAccumulator (Integer -> a)
-  | SetAccumulator Integer
-                   a
-  | LogOutput String
-              a
+  | SetAccumulator Integer a
+  | LogOutput String a
   deriving (Functor)
 
 getRandom :: Computation Integer
