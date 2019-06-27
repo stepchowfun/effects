@@ -1,0 +1,183 @@
+image: ubuntu:18.04
+tasks:
+  prepare_system:
+    description: Install system packages and set up a non-root user.
+    command: |
+      set -euo pipefail
+
+      # Create a non-root user.
+      adduser --disabled-password --gecos '' user
+
+      # Set up a directory for the non-root user's executables.
+      mkdir -p /home/user/.local/bin
+      chown user /home/user/.local/bin
+      echo 'export PATH="/home/user/.local/bin:$PATH"' >> /home/user/.profile
+
+      # Install system packages.
+      apt-get update
+      apt-get install --yes build-essential curl ruby
+
+      # Without this, Ruby will assume files are encoded as ASCII.
+      echo 'export LANG="C.UTF-8"' >> /home/user/.profile
+
+      # Install Stack.
+      curl -sSL https://get.haskellstack.org/ | sh
+
+  install_tools:
+    description: Install the tools needed to build, test, lint, and format Haskell programs.
+    dependencies:
+      - prepare_system
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Download a resolver and set up the Stack user configuration.
+      stack --resolver lts-12.14 setup
+
+      # Tell Stack to install other executables in `$HOME/.local/bin`.
+      echo 'local-bin-path: /home/user/.local/bin' >> \
+        /home/user/.stack/config.yaml
+
+      # Install a formatter and linter.
+      stack install hindent hlint
+
+  fetch_dependencies:
+    description: Download and compile dependencies.
+    dependencies:
+      - install_tools
+    input_paths:
+      - package.yaml
+      - stack.yaml
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Set up an empty project to build just to cache the dependencies for the real codebase.
+      touch README.md
+      mkdir app src test
+      echo 'module Main (main) where main :: IO (); main = pure ()' > \
+        app/Main.hs
+      echo 'main :: IO (); main = pure ()' > \
+        test/Spec.hs
+      stack --allow-different-user build
+      stack --allow-different-user test
+
+  build:
+    description: Build the program.
+    dependencies:
+      - fetch_dependencies
+    input_paths:
+      - app
+      - src
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Build the program.
+      stack --allow-different-user build
+
+  run:
+    description: Run the program.
+    dependencies:
+      - build
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Run the program.
+      stack --allow-different-user exec effects-exe
+
+  test:
+    description: Run the test suite.
+    dependencies:
+      - build
+    input_paths:
+      - test
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Run the test suite.
+      stack --allow-different-user test
+
+  lint:
+    description: Lint the code.
+    dependencies:
+      - fetch_dependencies
+    input_paths:
+      - app
+      - scripts
+      - src
+      - test
+      - toast.yml
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Make sure `$PATH` contains `/home/user/.local/bin`.
+      source ~/.profile
+
+      # Run the Haskell linter.
+      hlint .
+
+      # Run the general linter.
+      ./scripts/lint-general.rb $(
+        find . -type d \( \
+          -path ./.git -o \
+          -path ./.stack-work \
+        \) -prune -o \( \
+          -name '*.hs' -o \
+          -name '*.rb' -o \
+          -name '*.sh' -o \
+          -name '*.yml' -o \
+          -name 'Dockerfile' -o \
+          -name 'Makefile' \
+        \) -print
+      )
+
+      # Check that the code is correctly formatted.
+      for file in $(
+        find . -type d \( \
+          -path ./.git -o \
+          -path ./.stack-work \
+        \) -prune -o \( \
+          -name '*.hs' \
+        \) -print \
+      ); do
+        cat "$file" | hindent > "$file.tmp"
+        (cmp "$file.tmp" "$file" && rm "$file.tmp") ||
+          (rm "$file.tmp" && false) || exit 1
+      done
+
+  format:
+    description: Format the code.
+    dependencies:
+      - fetch_dependencies
+    input_paths:
+      - app
+      - src
+      - test
+    output_paths:
+      - app
+      - src
+      - test
+    user: user
+    command: |
+      set -euo pipefail
+
+      # Make sure `$PATH` contains `/home/user/.local/bin`.
+      source ~/.profile
+
+      # Format the code.
+      for file in $(
+        find . -type d \( \
+          -path ./.git -o \
+          -path ./.stack-work \
+        \) -prune -o \( \
+          -name '*.hs' \
+        \) -print \
+      ); do
+        cat "$file" | hindent > "$file.tmp"
+        (cmp --quiet "$file.tmp" "$file" && rm "$file.tmp") ||
+          mv "$file.tmp" "$file"
+      done
