@@ -114,7 +114,8 @@ tasks:
     command: |
       set -euo pipefail
 
-      # Make sure `$PATH` contains `/home/user/.local/bin`.
+      # Make sure (a) `$PATH` contains `/home/user/.local/bin` and (b) the `LANG` environment
+      # variable is set for Ruby.
       source ~/.profile
 
       # Run the Haskell linter.
