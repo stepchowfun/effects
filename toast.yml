@@ -49,6 +49,7 @@ tasks:
     input_paths:
       - package.yaml
       - stack.yaml
+      - stack.yaml.lock
     user: user
     command: |
       set -euo pipefail
@@ -62,6 +63,11 @@ tasks:
         test/Spec.hs
       stack --allow-different-user build
       stack --allow-different-user test
+
+      # Remove build artifacts for the empty project. This will force Stack/GHC to rebuild the
+      # project, which is a workaround for an issue in which Stack/GHC does not detect when source
+      # files are changed.
+      stack --allow-different-user clean
 
   build:
     description: Build the program.
