@@ -10,7 +10,7 @@ module FreeMonad
  - to structure programs was popularized by [1].
  -
  - [1] Wouter Swierstra. 2008. Data types à la carte. J. Funct. Program. 18, 4
- -     (July 2008), 423-436. DOI=http://dx.doi.org/10.1017/S0956796808006758
+ -     (July 2008), 423-436. DOI=https://doi.org/10.1017/S0956796808006758
  -}
 import Control.Monad (replicateM_)
 import Control.Monad.Free (Free(..), foldFree, liftF)

@@ -18,7 +18,7 @@ module BespokeMonad
  -
  - [2] Philip Wadler. 1990. Comprehending monads. In Proceedings of the 1990
  -     ACM conference on LISP and functional programming (LFP '90). ACM, New
- -     York, NY, USA, 61-78. DOI=http://dx.doi.org/10.1145/91556.91592
+ -     York, NY, USA, 61-78. DOI=https://doi.org/10.1145/91556.91592
  -}
 import Control.Monad (ap, replicateM_)
 import System.Random (StdGen, mkStdGen, randomR)
