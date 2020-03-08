@@ -2,7 +2,7 @@
 
 A brief exploration of the various approaches to modeling side effects in a purely functional programming language.
 
-[![Build Status](https://travis-ci.org/stepchowfun/effects.svg?branch=master)](https://travis-ci.org/stepchowfun/effects)
+[![Build status](https://github.com/stepchowfun/effects/workflows/Continuous%20integration/badge.svg?branch=master)](https://github.com/stepchowfun/effects/actions?query=branch%3Amaster)
 
 ## The challenge
 
